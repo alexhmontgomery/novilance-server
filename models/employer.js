@@ -8,12 +8,11 @@ module.exports = function (sequelize, DataTypes) {
     description: DataTypes.TEXT,
     city: DataTypes.STRING,
     state: DataTypes.STRING
-  }, {
-    classMethods: {
-      associate: function (models) {
-        // associations can be defined here
-      }
-    }
-  })
+  }, {})
+
+  Employer.associate = function (models) {
+    Employer.hasMany(models.Project, {as: 'project', foreignKey: 'employerId'})
+  }
+
   return Employer
 }
