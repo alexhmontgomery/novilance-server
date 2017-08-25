@@ -12,11 +12,56 @@ app.set('superSecret', config.secret)
 router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
-router.post('/authenticate', (req, res) => {
-  models.Freelancer.findOne({
+router.post('/register', (req, res) => {
+  models.Employer.findOne({
     where: {
-      username: req.body.username
+      email: req.body.email
     }}).then((user) => {
+      if (!user) {
+        const employer = models.Employer.build({
+          email: req.body.email,
+          password: req.body.password,
+          displayName: req.body.displayName,
+          description: req.body.description,
+          city: req.body.city,
+          state: req.body.state,
+          organization: req.body.organization
+        })
+        employer.save()
+          .then(() => {
+            // TODO: redirect to login page
+            res.json({
+              success: true,
+              message: 'New employer successfully created.'
+            })
+          })
+          .catch((err) => {
+            console.log(err)
+            res.json({
+              success: false,
+              message: 'Unable to create user.'
+            })
+          })
+      } else {
+        res.json({
+          success: false,
+          message: 'User already exists. Please use another email address.'
+        })
+      }
+    }).catch((err) => {
+      res.json({
+        success: false,
+        message: 'Failed to properly test user email against database.'
+      })
+    })
+})
+
+router.post('/authenticate', (req, res) => {
+  models.Employer.findOne({
+    where: {
+      email: req.body.email
+    }}).then((user) => {
+      console.log(user)
       if (user.password !== req.body.password) {
         res.json({
           success: false,
@@ -29,9 +74,9 @@ router.post('/authenticate', (req, res) => {
         console.log(secret)
         var token = jwt.sign({
           expiresIn: 1440,
-          username: user.username,
-          userId: user.id
-          // TODO: add role to pass
+          email: user.email,
+          userId: user.id,
+          role: user.role
         }, secret)
 
         console.log('performed token creation')
@@ -85,12 +130,13 @@ router.use((req, res, next) => {
   }
 })
 
+// USER HOME PAGE
 router.get('/home', (req, res) => {
-  models.Freelancer.findOne({
+  models.Employer.findOne({
     where: {id: req.user.userId}
-  }).then((freelancer) => {
+  }).then((employer) => {
     res.json({
-      freelancer: freelancer
+      employer: employer
     })
   })
   .catch((err) => {

@@ -1,24 +1,36 @@
 'use strict'
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    return queryInterface.createTable('Projects', {
+    return queryInterface.createTable('Freelancers', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      username: {
+        unique: true,
         type: Sequelize.STRING
       },
-      type: {
-        type: Sequelize.TEXT
+      email: {
+        unique: true,
+        type: Sequelize.STRING(320)
+      },
+      password: {
+        type: Sequelize.STRING
+      },
+      role: {
+        defaultValue: 'freelancer',
+        type: Sequelize.STRING
+      },
+      givenName: {
+        type: Sequelize.STRING
+      },
+      surname: {
+        type: Sequelize.STRING
       },
       description: {
         type: Sequelize.TEXT
-      },
-      rate: {
-        type: Sequelize.DECIMAL(10, 2)
       },
       city: {
         type: Sequelize.STRING
@@ -26,11 +38,11 @@ module.exports = {
       state: {
         type: Sequelize.STRING
       },
-      acceptingApps: {
-        type: Sequelize.BOOLEAN
+      school: {
+        type: Sequelize.TEXT
       },
-      completed: {
-        type: Sequelize.BOOLEAN
+      deletedAt: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -43,6 +55,6 @@ module.exports = {
     })
   },
   down: function (queryInterface, Sequelize) {
-    return queryInterface.dropTable('Projects')
+    return queryInterface.dropTable('Freelancers')
   }
 }

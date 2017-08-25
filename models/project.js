@@ -4,11 +4,13 @@ module.exports = function (sequelize, DataTypes) {
     name: DataTypes.STRING,
     type: DataTypes.TEXT,
     description: DataTypes.TEXT,
-    rate: DataTypes.DECIMAL(10, 2),
+    rate: DataTypes.DECIMAL,
     city: DataTypes.STRING,
     state: DataTypes.STRING,
     acceptingApps: DataTypes.BOOLEAN,
-    completed: DataTypes.BOOLEAN
+    completed: DataTypes.BOOLEAN,
+    deletedAt: DataTypes.DATE,
+    employerId: DataTypes.INTEGER
   }, {})
 
   Project.associate = function (models) {

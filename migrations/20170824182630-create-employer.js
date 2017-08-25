@@ -12,11 +12,15 @@ module.exports = {
         unique: true,
         type: Sequelize.STRING
       },
+      email: {
+        unique: true,
+        type: Sequelize.STRING(320)
+      },
       password: {
         type: Sequelize.STRING
       },
-      email: {
-        unique: true,
+      role: {
+        defaultValue: 'employer',
         type: Sequelize.STRING
       },
       displayName: {
@@ -30,6 +34,12 @@ module.exports = {
       },
       state: {
         type: Sequelize.STRING
+      },
+      organization: {
+        type: Sequelize.TEXT
+      },
+      deletedAt: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
