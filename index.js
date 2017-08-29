@@ -7,13 +7,14 @@ const models = require('./models')
 const jwt = require('jsonwebtoken')
 const logger = require('morgan')
 const router = express.Router()
+const authenticateRoutes = require('./routes/authenticate.js')
 const freelancerLoginRoutes = require('./routes/freelancer-login.js')
 const employerLoginRoutes = require('./routes/employer-login.js')
-// app.use(cors())
 
 app.set('superSecret', config.secret)
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(cors())
 app.use(logger('dev'))
 
 app.listen(config.port, () => {
@@ -41,5 +42,7 @@ app.get('/', function (req, res) {
 //   console.log(newFreelancer)
 // })
 
-app.use('/f', freelancerLoginRoutes)
-app.use('/e', employerLoginRoutes)
+app.use('/', authenticateRoutes)
+
+// app.use('/f', freelancerLoginRoutes)
+// app.use('/e', employerLoginRoutes)

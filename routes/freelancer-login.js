@@ -13,13 +13,14 @@ router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
 router.post('/register', (req, res) => {
+  const registerEmail = req.body.email.toLowerCase()
   models.Freelancer.findOne({
     where: {
-      email: req.body.email
+      email: registerEmail
     }}).then((user) => {
       if (!user) {
         const freelancer = models.Freelancer.build({
-          email: req.body.email,
+          email: registerEmail,
           password: req.body.password,
           givenName: req.body.givenName,
           surname: req.body.surname,
@@ -58,9 +59,10 @@ router.post('/register', (req, res) => {
 })
 
 router.post('/authenticate', (req, res) => {
+  const loginEmail = req.body.email.toLowerCase()
   models.Freelancer.findOne({
     where: {
-      email: req.body.email
+      email: loginEmail
     }}).then((user) => {
       console.log(user)
       if (user.password !== req.body.password) {
@@ -100,12 +102,9 @@ router.post('/authenticate', (req, res) => {
 
 // MIDDLEWARE TO VERIFY TOKEN
 router.use((req, res, next) => {
-  // check header or url parameters or post parameters for token
-  var token = req.body.token || req.query.token || req.headers['x-access-token']
-
+  const token = req.body.token || req.query.token || req.headers['x-access-token']
   // decode token
   if (token) {
-    // verifies secret and checks exp
     const secret = req.app.get('superSecret')
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
@@ -116,7 +115,6 @@ router.use((req, res, next) => {
           message: 'Failed to authenticate token.'
         })
       } else {
-        // Save to request for use in other routes
         req.user = decoded
         console.log('Token successfully authenticated')
         next()
