@@ -136,7 +136,9 @@ router.post('/authenticate', (req, res) => {
           res.json({
             success: true,
             message: 'User is authenticated',
-            token: token
+            token: token,
+            role: 'freelancer',
+            user: user
           })
         }
       })
@@ -175,7 +177,9 @@ router.post('/authenticate', (req, res) => {
           res.json({
             success: true,
             message: 'User is authenticated',
-            token: token
+            token: token,
+            role: 'employer',
+            user: user
           })
         }
       })
@@ -190,33 +194,33 @@ router.post('/authenticate', (req, res) => {
 })
 
 // MIDDLEWARE TO VERIFY TOKEN
-// router.use((req, res, next) => {
-//   const token = req.body.token || req.query.token || req.headers['x-access-token']
-//   // decode token
-//   if (token) {
-//     const secret = req.app.get('superSecret')
-//     jwt.verify(token, secret, (err, decoded) => {
-//       if (err) {
-//         console.log('Error: ' + err)
-//         console.log('Failed to authenticate token')
-//         return res.json({
-//           success: false,
-//           message: 'Failed to authenticate token.'
-//         })
-//       } else {
-//         req.user = decoded
-//         console.log('Token successfully authenticated')
-//         next()
-//       }
-//     })
-//   } else {
-//     console.log('No token provided')
-//     return res.status(403).send({
-//       success: false,
-//       message: 'No token provided.'
-//     })
-//   }
-// })
+router.use((req, res, next) => {
+  const token = req.body.token || req.query.token || req.headers['x-access-token']
+  // decode token
+  if (token) {
+    const secret = req.app.get('superSecret')
+    jwt.verify(token, secret, (err, decoded) => {
+      if (err) {
+        console.log('Error: ' + err)
+        console.log('Failed to authenticate token')
+        return res.json({
+          success: false,
+          message: 'Failed to authenticate token.'
+        })
+      } else {
+        req.user = decoded
+        console.log('Token successfully authenticated')
+        next()
+      }
+    })
+  } else {
+    console.log('No token provided')
+    return res.status(403).send({
+      success: false,
+      message: 'No token provided.'
+    })
+  }
+})
 
 // EMPLOYER HOME PAGE
 router.get('/profile', (req, res) => {
