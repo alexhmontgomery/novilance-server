@@ -195,6 +195,7 @@ router.post('/authenticate', (req, res) => {
 
 // MIDDLEWARE TO VERIFY TOKEN
 router.use((req, res, next) => {
+  console.log(req.body)
   const token = req.body.token || req.query.token || req.headers['x-access-token']
   // decode token
   if (token) {
@@ -237,28 +238,6 @@ router.get('/profile', (req, res) => {
     })
     console.log(err)
   })
-})
-
-// EMPLOYER PROJECT CREATE
-router.post('/project/create', (req, res) => {
-  const newProject = models.Project.build({
-    name: req.body.name,
-    type: req.body.type,
-    description: req.body.description,
-    rate: req.body.rate,
-    city: req.body.city,
-    state: req.body.state,
-    employerId: req.user.userId
-  })
-  newProject.save()
-    .then((project) => {
-      // TODO: redirect to confirmation page
-      res.json({
-        success: true,
-        message: 'New project was successfully created',
-        project: project
-      })
-    })
 })
 
 module.exports = router

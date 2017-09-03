@@ -8,8 +8,9 @@ const jwt = require('jsonwebtoken')
 const logger = require('morgan')
 const router = express.Router()
 const authenticateRoutes = require('./routes/authenticate.js')
-const freelancerLoginRoutes = require('./routes/freelancer-login.js')
-const employerLoginRoutes = require('./routes/employer-login.js')
+const projectRoutes = require('./routes/project.js')
+// const freelancerLoginRoutes = require('./routes/freelancer-login.js')
+// const employerLoginRoutes = require('./routes/employer-login.js')
 
 app.set('superSecret', config.secret)
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -43,6 +44,7 @@ app.get('/', function (req, res) {
 // })
 
 app.use('/', authenticateRoutes)
+app.use('/', projectRoutes)
 
 // app.use('/f', freelancerLoginRoutes)
 // app.use('/e', employerLoginRoutes)
