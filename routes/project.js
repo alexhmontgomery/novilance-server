@@ -91,4 +91,27 @@ router.get('/project/:id', (req, res) => {
     })
 })
 
+router.get('/projects/employer/master', (req, res) => {
+  console.log('entered route to get master list')
+  models.Project.findAll({
+    where: {
+      employerId: req.user.userId
+    }
+  })
+    .then((projects) => {
+      console.log('found:' + projects)
+      res.json({
+        success: true,
+        projects: projects
+      })
+    })
+    .catch((error) => {
+      res.json({
+        success: false,
+        message: 'Failed to find projects.',
+        error: error
+      })
+    })
+})
+
 module.exports = router
