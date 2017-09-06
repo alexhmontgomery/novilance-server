@@ -34,18 +34,31 @@ router.post('/register', (req, res) => {
             school: req.body.school
           })
           freelancer.save()
-            .then(() => {
-              // TODO: redirect to login page
+            .then((user) => {
+              const secret = app.get('superSecret')
+              console.log(secret)
+              var token = jwt.sign({
+                expiresIn: 1440,
+                email: user.email,
+                userId: user.id,
+                role: user.role
+              }, secret)
+
+              console.log('performed token creation')
+              // return the information including token as JSON
               res.json({
                 success: true,
-                message: 'New freelancer successfully created.'
+                message: 'New freelancer successfully created',
+                token: token,
+                role: 'freelancer',
+                user: user
               })
             })
             .catch((err) => {
               console.log(err)
               res.json({
                 success: false,
-                message: 'Unable to create user.'
+                error: err
               })
             })
         } else {
@@ -57,7 +70,7 @@ router.post('/register', (req, res) => {
       }).catch((err) => {
         res.json({
           success: false,
-          message: 'Failed to properly test user email against database.'
+          error: err
         })
       })
   } else { // register for Employer
@@ -76,18 +89,32 @@ router.post('/register', (req, res) => {
             organization: req.body.organization
           })
           employer.save()
-            .then(() => {
-              // TODO: redirect to login page
+            .then((user) => {
+              const secret = app.get('superSecret')
+              console.log(secret)
+              var token = jwt.sign({
+                expiresIn: 1440,
+                email: user.email,
+                userId: user.id,
+                role: user.role
+              }, secret)
+
+              console.log('performed token creation')
+              // return the information including token as JSON
               res.json({
                 success: true,
-                message: 'New employer successfully created.'
+                message: 'New employer successfully created',
+                token: token,
+                role: 'employer',
+                user: user
               })
             })
             .catch((err) => {
               console.log(err)
               res.json({
                 success: false,
-                message: 'Unable to create user.'
+                message: 'Unable to create user.',
+                error: err
               })
             })
         } else {
@@ -99,7 +126,8 @@ router.post('/register', (req, res) => {
       }).catch((err) => {
         res.json({
           success: false,
-          message: 'Failed to properly test user email against database.'
+          message: 'Failed to properly test user email against database.',
+          error: err
         })
       })
   }
@@ -117,7 +145,7 @@ router.post('/authenticate', (req, res) => {
         if (user.password !== req.body.password) {
           res.json({
             success: false,
-            message: 'Authentication failed. Password was incorrect.'
+            message: 'Authentication failed. Password did not match account associated with email.'
           })
         } else {
           console.log('determined password and username correct')
@@ -145,7 +173,8 @@ router.post('/authenticate', (req, res) => {
       .catch((err) => {
         res.status(422).json({
           success: false,
-          message: 'Authentication failed. User not found'
+          message: 'Authentication failed. User not found',
+          error: err
         })
         console.log(err)
       })
@@ -158,7 +187,7 @@ router.post('/authenticate', (req, res) => {
         if (user.password !== req.body.password) {
           res.json({
             success: false,
-            message: 'Authentication failed. Password was incorrect.'
+            message: 'Authentication failed. Password did not match account associated with email.'
           })
         } else {
           console.log('determined password and username correct')
@@ -186,7 +215,8 @@ router.post('/authenticate', (req, res) => {
       .catch((err) => {
         res.status(422).json({
           success: false,
-          message: 'Authentication failed. User not found'
+          message: 'Authentication failed. User not found',
+          error: err
         })
         console.log(err)
       })

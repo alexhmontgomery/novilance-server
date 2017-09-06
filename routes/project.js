@@ -63,6 +63,36 @@ router.post('/project/create', (req, res) => {
     })
 })
 
+// LOAD ALL Projects
+router.get('/projects/all', (req, res) => {
+  models.Project.findAll({
+    include: [
+      {model: models.Employer, as: 'employer'},
+      {model: models.Interest, as: 'interest'}
+      // {
+      //   model: models.Interest,
+      //   where: {
+      //     freelancerId: req.user.userId
+      //   },
+      //   as: 'interest'
+      // }
+    ]
+  })
+    .then((projects) => {
+      res.json({
+        success: true,
+        projects: projects
+      })
+    })
+    .catch((error) => {
+      res.json({
+        success: false,
+        message: 'Failed to find projects.',
+        error: error
+      })
+    })
+})
+
 // LOAD A PROJECT
 router.get('/project/:id', (req, res) => {
   console.log(req.params)
@@ -91,27 +121,83 @@ router.get('/project/:id', (req, res) => {
     })
 })
 
-router.get('/projects/employer/master', (req, res) => {
-  console.log('entered route to get master list')
-  models.Project.findAll({
-    where: {
-      employerId: req.user.userId
-    }
+router.post('/project/interest', (req, res) => {
+  console.log('Trying to create interest----------')
+  const newInterest = models.Interest.build({
+    projectId: req.body.projectId,
+    freelancerId: req.user.userId
   })
-    .then((projects) => {
-      console.log('found:' + projects)
+  newInterest.save()
+    .then((interest) => {
       res.json({
         success: true,
-        projects: projects
+        message: 'New interest was successfully created',
+        interest: interest
       })
     })
     .catch((error) => {
       res.json({
         success: false,
-        message: 'Failed to find projects.',
+        message: 'Failed to create interest.',
         error: error
       })
     })
+})
+
+router.get('/projects/:role/master', (req, res) => {
+  console.log('entered route to get master list')
+  if (req.params.role === 'employer') {
+    models.Project.findAll({
+      where: {
+        employerId: req.user.userId
+      },
+      include: {
+        model: models.Interest,
+        as: 'interest'
+      }
+    })
+      .then((projects) => {
+        console.log('found:' + projects)
+        res.json({
+          success: true,
+          projects: projects
+        })
+      })
+      .catch((error) => {
+        res.json({
+          success: false,
+          message: 'Failed to find projects.',
+          error: error
+        })
+      })
+  } else if (req.params.role === 'freelancer') {
+    models.Project.findAll({
+      include: [
+        {model: models.Employer, as: 'employer'},
+        {
+          model: models.Interest,
+          where: {
+            freelancerId: req.user.userId
+          },
+          as: 'interest'
+        }
+      ]
+    })
+      .then((projects) => {
+        console.log('found:' + projects)
+        res.json({
+          success: true,
+          projects: projects
+        })
+      })
+      .catch((error) => {
+        res.json({
+          success: false,
+          message: 'Failed to find projects.',
+          error: error
+        })
+      })
+  }
 })
 
 module.exports = router
