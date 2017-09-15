@@ -15,6 +15,7 @@ module.exports = function (sequelize, DataTypes) {
 
   Project.associate = function (models) {
     Project.belongsTo(models.Employer, {as: 'employer', foreignKey: 'employerId'})
+    Project.belongsTo(models.Client, {as: 'client', foreignKey: 'clientId'})
     Project.hasMany(models.Interest, {as: 'interest', foreignKey: 'projectId'})
   }
 

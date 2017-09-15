@@ -106,10 +106,21 @@ router.get('/project/:id', (req, res) => {
     }
   })
     .then((project) => {
-      res.json({
-        success: true,
-        message: 'Project successfully found.',
-        project: project
+      models.Interest.findAll({
+        where: {
+          projectId: project.id
+        },
+        include: {
+          model: models.Freelancer,
+          as: 'freelancer'
+        }
+      }).then((interests) => {
+        res.json({
+          success: true,
+          message: 'Project successfully found.',
+          project: project,
+          interests: interests
+        })
       })
     })
     .catch((error) => {
