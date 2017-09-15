@@ -41,7 +41,7 @@ router.use((req, res, next) => {
   }
 })
 
-// EMPLOYER PROJECT CREATE
+// CLIENT PROJECT CREATE
 router.post('/project/create', (req, res) => {
   const newProject = models.Project.build({
     name: req.body.name,
@@ -50,7 +50,7 @@ router.post('/project/create', (req, res) => {
     rate: req.body.rate,
     city: req.body.city,
     state: req.body.state,
-    employerId: req.user.userId
+    clientId: req.user.userId
   })
   newProject.save()
     .then((project) => {
@@ -67,7 +67,7 @@ router.post('/project/create', (req, res) => {
 router.get('/projects/all', (req, res) => {
   models.Project.findAll({
     include: [
-      {model: models.Employer, as: 'employer'},
+      {model: models.Client, as: 'client'},
       {model: models.Interest, as: 'interest'}
       // {
       //   model: models.Interest,
@@ -101,8 +101,8 @@ router.get('/project/:id', (req, res) => {
       id: req.params.id
     },
     include: {
-      model: models.Employer,
-      as: 'employer'
+      model: models.Client,
+      as: 'client'
     }
   })
     .then((project) => {
@@ -157,10 +157,10 @@ router.post('/project/interest', (req, res) => {
 
 router.get('/projects/:role/master', (req, res) => {
   console.log('entered route to get master list')
-  if (req.params.role === 'employer') {
+  if (req.params.role === 'client') {
     models.Project.findAll({
       where: {
-        employerId: req.user.userId
+        clientId: req.user.userId
       },
       include: {
         model: models.Interest,
@@ -184,7 +184,7 @@ router.get('/projects/:role/master', (req, res) => {
   } else if (req.params.role === 'freelancer') {
     models.Project.findAll({
       include: [
-        {model: models.Employer, as: 'employer'},
+        {model: models.Client, as: 'client'},
         {
           model: models.Interest,
           where: {

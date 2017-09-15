@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       role: {
-        defaultValue: 'employer',
+        defaultValue: 'client',
         type: Sequelize.STRING
       },
       displayName: {

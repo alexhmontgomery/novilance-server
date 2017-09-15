@@ -73,13 +73,13 @@ router.post('/register', (req, res) => {
           error: err
         })
       })
-  } else { // register for Employer
-    models.Employer.findOne({
+  } else { // register for Client
+    models.Client.findOne({
       where: {
         email: registerEmail
       }}).then((user) => {
         if (!user) {
-          const employer = models.Employer.build({
+          const client = models.Client.build({
             email: registerEmail,
             password: req.body.password,
             displayName: req.body.displayName,
@@ -88,7 +88,7 @@ router.post('/register', (req, res) => {
             state: req.body.state,
             organization: req.body.organization
           })
-          employer.save()
+          client.save()
             .then((user) => {
               const secret = app.get('superSecret')
               console.log(secret)
@@ -103,9 +103,9 @@ router.post('/register', (req, res) => {
               // return the information including token as JSON
               res.json({
                 success: true,
-                message: 'New employer successfully created',
+                message: 'New client successfully created',
                 token: token,
-                role: 'employer',
+                role: 'client',
                 user: user
               })
             })
@@ -178,8 +178,8 @@ router.post('/authenticate', (req, res) => {
         })
         console.log(err)
       })
-  } else { // login as Employer
-    models.Employer.findOne({
+  } else { // login as Client
+    models.Client.findOne({
       where: {
         email: loginEmail
       }}).then((user) => {
@@ -207,7 +207,7 @@ router.post('/authenticate', (req, res) => {
             success: true,
             message: 'User is authenticated',
             token: token,
-            role: 'employer',
+            role: 'client',
             user: user
           })
         }
@@ -253,13 +253,13 @@ router.use((req, res, next) => {
   }
 })
 
-// EMPLOYER HOME PAGE
+// CLIENT HOME PAGE
 router.get('/profile', (req, res) => {
-  models.Employer.findOne({
+  models.Client.findOne({
     where: {id: req.user.userId}
-  }).then((employer) => {
+  }).then((client) => {
     res.json({
-      employer: employer
+      client: client
     })
   })
   .catch((err) => {

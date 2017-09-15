@@ -34,9 +34,9 @@ module.exports = function (sequelize, DataTypes) {
     deletedAt: DataTypes.DATE
   }, {})
 
-  Employer.associate = function (models) {
-    Employer.hasMany(models.Project, {as: 'project', foreignKey: 'employerId'})
-  }
+  // Employer.associate = function (models) {
+  //   Employer.hasMany(models.Project, {as: 'project', foreignKey: 'employerId'})
+  // }
 
   return Employer
 }

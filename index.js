@@ -26,19 +26,28 @@ app.get('/', function (req, res) {
   res.json({ message: 'This is the Novilance Homepage!' })
 })
 
-const client = models.Client.build({
-  email: 'test@whatever.com',
-  password: 'password',
-  displayName: 'TESTERSSSS',
-  description: 'Company that needs developers',
-  city: 'Houston',
-  state: 'Texas',
-  organization: 'Test Company Group'
-})
+// const interest = models.Interest.build({
+//   freelancerId: 1,
+//   projectId: 13
+// })
+//
+// interest.save().then(function (newInterest) {
+//   console.log(newInterest)
+// })
 
-client.save().then(function (newClient) {
-  console.log(newClient)
-})
+// const client = models.Client.build({
+//   email: 'fake@company.com',
+//   password: 'password',
+//   displayName: 'Test Company',
+//   description: 'Company that needs developers',
+//   city: 'Houston',
+//   state: 'Texas',
+//   organization: 'Test Company Group'
+// })
+//
+// client.save().then(function (newClient) {
+//   console.log(newClient)
+// })
 
 // CREATE NEW FREELANCER FOR TESTING
 // const freelancer = models.Freelancer.build({

@@ -9,12 +9,10 @@ module.exports = function (sequelize, DataTypes) {
     state: DataTypes.STRING,
     acceptingApps: DataTypes.BOOLEAN,
     completed: DataTypes.BOOLEAN,
-    deletedAt: DataTypes.DATE,
-    employerId: DataTypes.INTEGER
+    deletedAt: DataTypes.DATE
   }, {})
 
   Project.associate = function (models) {
-    Project.belongsTo(models.Employer, {as: 'employer', foreignKey: 'employerId'})
     Project.belongsTo(models.Client, {as: 'client', foreignKey: 'clientId'})
     Project.hasMany(models.Interest, {as: 'interest', foreignKey: 'projectId'})
   }
