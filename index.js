@@ -9,6 +9,7 @@ const logger = require('morgan')
 const router = express.Router()
 const authenticateRoutes = require('./routes/authenticate.js')
 const projectRoutes = require('./routes/project.js')
+const profileRoutes = require('./routes/profile.js')
 // const freelancerLoginRoutes = require('./routes/freelancer-login.js')
 // const employerLoginRoutes = require('./routes/employer-login.js')
 
@@ -68,6 +69,6 @@ app.get('/', function (req, res) {
 
 app.use('/', authenticateRoutes)
 app.use('/', projectRoutes)
-
+app.use('/', profileRoutes)
 // app.use('/f', freelancerLoginRoutes)
 // app.use('/e', employerLoginRoutes)
