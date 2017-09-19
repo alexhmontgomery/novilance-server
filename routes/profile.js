@@ -41,66 +41,105 @@ router.use((req, res, next) => {
   }
 })
 
-// FIND CLIENT PROFILE
-router.get('/profile/client/:id', (req, res) => {
-  models.Client.findOne({
-    where: {id: req.params.id}
-  })
-    .then((client) => {
-      res.json({
-        success: true,
-        message: 'Client profile successfully found',
-        client: client
-      })
+// FIND PROFILE OF FREELANCER OR CLIENT
+router.get('/profile/:role/:id', (req, res) => {
+  if (req.params.role === 'client') {
+    models.Client.findOne({
+      where: {id: req.params.id}
     })
-    .catch((error) => {
-      res.json({
-        success: false,
-        message: 'Failed to find client profile',
-        error: error
-      })
-    })
-})
-
-// EDIT CLIENT PROFILE
-router.put('/profile/client/update', (req, res) => {
-  console.log('request id: ' + req.params.id + 'end')
-  console.log('user id: ' + req.user.userId + 'end')
-  // if (req.user.userId === req.params.id) {
-  console.log('passed initial test')
-  models.Client.findOne({
-    where: {id: req.user.userId}
-  })
       .then((client) => {
-        console.log('found client profile info to update')
-        client.displayName = req.body.displayName
-        client.organization = req.body.organization
-        client.description = req.body.description
-        client.city = req.body.city
-        client.state = req.body.state
-        client.save()
-          .then((client2) => {
-            console.log('updated client profile info')
-            res.json({
-              success: true,
-              message: 'Client profile successfully updated',
-              client: client2
-            })
-          })
+        res.json({
+          success: true,
+          message: 'Client profile successfully found',
+          client: client
+        })
       })
       .catch((error) => {
         res.json({
           success: false,
-          message: 'Unable to update your profile',
+          message: 'Failed to find client profile',
           error: error
         })
       })
-  // } else {
-  //   res.json({
-  //     success: false,
-  //     message: 'Cannot update profile of another user'
-  //   })
-  // }
+  } else if (req.params.role === 'freelancer') {
+    models.Freelancer.findOne({
+      where: {id: req.params.id}
+    })
+      .then((freelancer) => {
+        res.json({
+          success: true,
+          message: 'Freelancer profile successfully found',
+          freelancer: freelancer
+        })
+      })
+      .catch((error) => {
+        res.json({
+          success: false,
+          message: 'Failed to find freelancer profile',
+          error: error
+        })
+      })
+  }
+})
+
+// UPDATE USER PROFILE
+router.put('/profile/:role/update', (req, res) => {
+  if (req.params.role === 'client') {
+    models.Client.findOne({
+      where: {id: req.user.userId}
+    })
+        .then((client) => {
+          client.displayName = req.body.displayName
+          client.organization = req.body.organization
+          client.description = req.body.description
+          client.city = req.body.city
+          client.state = req.body.state
+          client.save()
+            .then((client2) => {
+              console.log('updated client profile info')
+              res.json({
+                success: true,
+                message: 'Your profile was successfully updated',
+                client: client2
+              })
+            })
+        })
+        .catch((error) => {
+          res.json({
+            success: false,
+            message: 'Unable to update your profile',
+            error: error
+          })
+        })
+  } else if (req.params.role === 'freelancer') {
+    models.Freelancer.findOne({
+      where: {id: req.user.userId}
+    })
+        .then((freelancer) => {
+          freelancer.givenName = req.body.givenName
+          freelancer.surname = req.body.surname
+          freelancer.description = req.body.description
+          freelancer.city = req.body.city
+          freelancer.state = req.body.state
+          freelancer.school = req.body.school
+          freelancer.save()
+            .then((freelancer2) => {
+              console.log('updated freelancer profile info')
+              res.json({
+                success: true,
+                message: 'Your profile was successfully updated',
+                freelancer: freelancer2
+              })
+            })
+        })
+        .catch((error) => {
+          res.json({
+            success: false,
+            message: 'Unable to update your profile',
+            error: error
+          })
+        })
+  }
 })
 
 module.exports = router
