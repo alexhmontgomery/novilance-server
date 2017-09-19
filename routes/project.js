@@ -93,6 +93,65 @@ router.get('/projects/all', (req, res) => {
     })
 })
 
+// SEARCH projects
+router.get('/projects/search', (req, res) => {
+  const whereClause = {}
+  whereClause[req.query.key] = {
+    $iLike: `%${req.query.value}`
+  }
+  // whereClause.start = "yesterday"
+  // whereClause[req.query.id] = req.query.value;
+
+  if (req.query.key === 'client') {
+    models.Project.findAll({
+      include: [
+        {model: models.Client, as: 'client'},
+        {model: models.Interest, as: 'interest'}]
+    })
+    .then((projects) => {
+      let clientProjects = []
+
+      for (var i = 0; i < projects.length; i++) {
+        if (projects[i].client.displayName === req.query.value) {
+          clientProjects.push(projects[i])
+        }
+      }
+
+      res.json({
+        success: true,
+        projects: clientProjects
+      })
+    })
+    .catch((error) => {
+      res.json({
+        success: false,
+        message: 'Failed to find projects.',
+        error: error
+      })
+    })
+  } else {
+    models.Project.findAll({
+      where: whereClause,
+      include: [
+        {model: models.Client, as: 'client'},
+        {model: models.Interest, as: 'interest'}]
+    })
+    .then((projects) => {
+      res.json({
+        success: true,
+        projects: projects
+      })
+    })
+    .catch((error) => {
+      res.json({
+        success: false,
+        message: 'Failed to find projects.',
+        error: error
+      })
+    })
+  }
+})
+
 // LOAD A PROJECT
 router.get('/project/:id', (req, res) => {
   console.log(req.params)
