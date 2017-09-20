@@ -153,7 +153,7 @@ router.get('/projects/search', (req, res) => {
 })
 
 // LOAD A PROJECT
-router.get('/project/:id', (req, res) => {
+router.get('/projects/:id', (req, res) => {
   console.log(req.params)
   models.Project.findOne({
     where: {
