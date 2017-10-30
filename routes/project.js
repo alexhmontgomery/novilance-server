@@ -159,10 +159,10 @@ router.get('/projects/:id', (req, res) => {
     where: {
       id: req.params.id
     },
-    include: {
-      model: models.Client,
-      as: 'client'
-    }
+    include: [
+      {model: models.Client, as: 'client'},
+      {model: models.Interest, as: 'interest'}
+    ]
   })
     .then((project) => {
       models.Interest.findAll({
