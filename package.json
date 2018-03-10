@@ -17,6 +17,7 @@
     "jsonwebtoken": "^7.4.3",
     "lodash": "^4.17.4",
     "morgan": "^1.8.2",
+    "nodemailer": "^4.6.2",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.0",
     "pg": "^7.2.0",

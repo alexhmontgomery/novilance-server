@@ -10,6 +10,7 @@ const router = express.Router()
 const authenticateRoutes = require('./routes/authenticate.js')
 const projectRoutes = require('./routes/project.js')
 const profileRoutes = require('./routes/profile.js')
+const launchRoutes = require('./routes/launch.js')
 // const freelancerLoginRoutes = require('./routes/freelancer-login.js')
 // const employerLoginRoutes = require('./routes/employer-login.js')
 
