@@ -67,7 +67,7 @@ app.get('/', function (req, res) {
 // freelancer.save().then(function (newFreelancer) {
 //   console.log(newFreelancer)
 // })
-
+app.use('/', launchRoutes)
 app.use('/', authenticateRoutes)
 app.use('/', projectRoutes)
 app.use('/', profileRoutes)
