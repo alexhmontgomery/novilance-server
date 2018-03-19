@@ -11,6 +11,7 @@ const authenticateRoutes = require('./routes/authenticate.js')
 const projectRoutes = require('./routes/project.js')
 const profileRoutes = require('./routes/profile.js')
 const launchRoutes = require('./routes/launch.js')
+var pg = require('pg')
 // const freelancerLoginRoutes = require('./routes/freelancer-login.js')
 // const employerLoginRoutes = require('./routes/employer-login.js')
 
@@ -19,6 +20,19 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cors())
 app.use(logger('dev'))
+
+// Allows app to connect to Heroku database
+pg.defaults.ssl = true
+pg.connect(process.env.DATABASE_URL, function (err, client) {
+  if (err) throw err
+  console.log('Connected to postgres! Getting schemas...')
+
+  client
+    .query('SELECT table_schema,table_name FROM information_schema.tables;')
+    .on('row', function (row) {
+      console.log(JSON.stringify(row))
+    })
+})
 
 app.listen(config.port, () => {
   console.log(`Server is on host:port:${config.port}`)
