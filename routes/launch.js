@@ -24,7 +24,7 @@ router.post('/launchRegister', (req, res) => {
 
       res.json({
         success: true,
-        message: 'Email saved successfully'
+        message: "Thank you! We'll let you know when we're up and running."
       })
     })
     .catch((err) => {
