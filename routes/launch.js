@@ -7,6 +7,13 @@ const nodemailer = require('nodemailer')
 router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
+router.get('/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'You have successfully connected'
+  })
+})
+
 router.post('/launchRegister', (req, res) => {
   setTimeout(function () {
     const launchEmail = req.body.email.toLowerCase()
