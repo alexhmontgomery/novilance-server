@@ -18,7 +18,7 @@ var pg = require('pg')
 app.set('superSecret', config.secret)
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-app.use(cors())
+// app.use(cors())
 app.use(logger('dev'))
 
 // Allows app to connect to Heroku database
