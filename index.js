@@ -18,7 +18,7 @@ const launchRoutes = require('./routes/launch.js')
 app.set('superSecret', config.secret)
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-// app.use(cors())
+app.use(cors())
 app.use(logger('dev'))
 
 const { Client } = require('pg')
