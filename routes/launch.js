@@ -15,17 +15,17 @@ router.get('/test', (req, res) => {
 })
 
 router.post('/launchRegister', (req, res) => {
-  setTimeout(function () {
-    const launchEmail = req.body.email.toLowerCase()
+  const launchEmail = req.body.email.toLowerCase()
 
-    console.log('received: ' + req.body)
-    console.log(launchEmail)
+  console.log('received: ')
+  console.log(req.body)
+  console.log(launchEmail)
 
-    const prospect = models.Prospect.build({
-      email: launchEmail
-    })
+  const prospect = models.Prospect.build({
+    email: launchEmail
+  })
 
-    prospect.save()
+  prospect.save()
     .then((newProspect) => {
       console.log(newProspect)
 
@@ -33,41 +33,44 @@ router.post('/launchRegister', (req, res) => {
         success: true,
         message: "Thank you! We'll let you know when we're up and running."
       })
+
+      const transporter = nodemailer.createTransport({
+        host: 'mi3-ss15.a2hosting.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: 'info@novilance.com',
+          pass: 'Hn&X{uLWWD-6'
+        }
+      })
+
+      const emailText = 'New Novilance.com launch page inquiry from ' + launchEmail
+
+      const mailOptions = {
+        from: 'info@novilance.com',
+        to: ['alexhmontgomery@gmail.com', 'williamfentress@gmail.com'],
+        cc: ['alex@novilance.com', 'will@novilance.com'],
+        subject: 'Novilance Launch Inquiry',
+        text: emailText
+      }
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error)
+        } else {
+          console.log('Message sent: ' + info.response)
+        }
+      })
     })
     .catch((err) => {
       console.log('Error saving email to database')
+      console.log(err)
 
       res.json({
         success: false,
         error: err
       })
     })
-
-    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: 'alexhmontgomery@gmail.com',
-        pass: 'Jennings.85'
-      }
-    })
-
-    const emailText = 'New launch page inquiry from ' + launchEmail
-
-    const mailOptions = {
-      from: 'alexhmontgomery@gmail.com',
-      to: 'alexhmontgomery@gmail.com',
-      subject: 'Novilance Launch Inquiry',
-      text: emailText
-    }
-
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error)
-      } else {
-        console.log('Message sent: ' + info.response)
-      }
-    })
-  }, 5000)
 })
 
 module.exports = router
