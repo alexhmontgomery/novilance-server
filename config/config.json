@@ -14,6 +14,10 @@
     "dialect": "postgres"
   },
   "production": {
-    "use_env_variable": "DATABASE_URL"
+    "username": "novilanc_pgadmin",
+    "password": "TAMUcorps2007",
+    "database": "novilanc_db032018",
+    "host": "localhost",
+    "dialect": "postgres"
   }
 }

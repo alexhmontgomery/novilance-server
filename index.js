@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const config = require('./config/main')
 const models = require('./models')
 const jwt = require('jsonwebtoken')
-const logger = require('morgan')
+// const logger = require('morgan')
 const router = express.Router()
 const authenticateRoutes = require('./routes/authenticate.js')
 const projectRoutes = require('./routes/project.js')
@@ -19,13 +19,12 @@ app.set('superSecret', config.secret)
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cors())
-app.use(logger('dev'))
+// app.use(logger('dev'))
 
 const { Client } = require('pg')
 
 const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true
+  connectionString: 'postgres://novilanc_pgadmin:TAMUcorps2007@localhost/novilanc_db032018'
 })
 
 client.connect()
@@ -45,15 +44,6 @@ app.listen(config.port, () => {
 app.get('/', function (req, res) {
   res.json({ message: 'This is the Novilance Homepage!' })
 })
-
-// const interest = models.Interest.build({
-//   freelancerId: 1,
-//   projectId: 13
-// })
-//
-// interest.save().then(function (newInterest) {
-//   console.log(newInterest)
-// })
 
 // const client = models.Client.build({
 //   email: 'fake@company.com',
